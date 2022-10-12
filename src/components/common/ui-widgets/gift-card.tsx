@@ -5,14 +5,16 @@ import { GiftCardImage } from './gift-card-image';
 import { constants } from '../../../utils/constants';
 
 import './gift-card.less';
+import _ from 'lodash'
 
-interface GiftCardProps {
+export interface GiftCardProps {
     altText?: string;
     className?: string;
     imgUrl?: string;
     name: string;
     value?: number;
 }
+
 
 export const GiftCard: React.FC<GiftCardProps> = ({ name, value, imgUrl, altText, className }): React.ReactElement => {
     const classes: string = Classnames('gift-card', className),

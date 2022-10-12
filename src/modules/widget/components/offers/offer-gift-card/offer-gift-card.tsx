@@ -4,6 +4,11 @@ import { GiftCard, BonusTag } from '../../../../../components/common/';
 import { PrizeoutOffer } from '../../../../../slices/offers-slice';
 
 import './offer-gift-card.less';
+import { useAppSelector } from '../../../../../hooks';
+import _ from 'lodash';
+import { selectActiveItem, setActiveItem } from '../../../../../slices/activeItem-slice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../../store';
 
 interface OfferGiftCardProps {
     offer: PrizeoutOffer;
@@ -12,11 +17,16 @@ interface OfferGiftCardProps {
 
 export const OfferGiftCard: React.FC<OfferGiftCardProps> = ({ offer, onClickHandler }): React.ReactElement => {
     let activeOfferId;
-
+    const dispatch = useDispatch<AppDispatch>();
+    
     const firstGiftCard = offer.giftcard_list[0];
     const offerType = firstGiftCard.display_monetary_bonus ? 'monetary' : 'percentage';
     const offerValue = firstGiftCard.display_bonus;
-    const classes: string = Classnames('offer-gift-card', {
+
+    const isActive:boolean = _.isEqual( useAppSelector(selectActiveItem), offer)
+    const activeClass:string = isActive? 'active' : ''
+
+    const classes: string = Classnames('offer-gift-card', activeClass, {
         'selected-offer-gift-card': activeOfferId === firstGiftCard.checkout_value_id,
     });
 
@@ -29,7 +39,7 @@ export const OfferGiftCard: React.FC<OfferGiftCardProps> = ({ offer, onClickHand
     return (
         <div
             className={classes}
-            onClick={() => onClickHandler()}
+            onClick={() => dispatch(setActiveItem(offer))}
             onKeyDown={(event) => selectOfferOnEnter(event)}
             role="button"
             tabIndex={0}
